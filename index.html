@@ -1039,7 +1039,10 @@ function renderLiga() {
       </select>
     </div>
 
-    <div style="font-size:10px;color:var(--muted);margin-bottom:12px;letter-spacing:.3px;text-transform:uppercase;">${currentLiga} · División ${currentDiv} ${isLive?'· <span style="color:var(--green)">● En curso</span>':''}</div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:12px;letter-spacing:.3px;text-transform:uppercase;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+  <span>${currentLiga} · División ${currentDiv}</span>
+  ${isLive ? '<span style="display:inline-flex;align-items:center;gap:4px;background:#16a34a;color:#ffffff;font-size:10px;font-weight:850;padding:4px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.3px;">● LIVE</span>' : ''}
+</div>
 
     <div class="liga-layout">
       <div>
