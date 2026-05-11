@@ -354,7 +354,11 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 
 .rank-table th:nth-child(5),
 .rank-table td:nth-child(5) {
-  width: 17%;
+  width: 12%;
+}
+.rank-table th:nth-child(6),
+.rank-table td:nth-child(6) {
+  width: 12%;
 }
 
 .rank-pos {
@@ -397,8 +401,8 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 }
 
 .rank-player-avatar {
-  width: 30px;
-  height: 30px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--border);
@@ -407,8 +411,8 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 }
 
 .rank-player-initials {
-  width: 30px;
-  height: 30px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: var(--bg);
   border: 2px solid var(--border);
@@ -452,6 +456,10 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
   font-weight: 700;
   color: var(--text);
 }
+.rank-racha-w { display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:#dcfce7;color:#166534; }
+.rank-racha-l { display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:#fee2e2;color:#991b1b; }
+.rank-div-sub { font-size:11px;color:var(--muted);margin-top:1px; }
+.rank-top3 td { background:var(--light); }
 /* Coming soon */
 .coming-soon { text-align: center; padding: 80px 0; color: var(--muted); font-size: 14px; }
 
@@ -824,18 +832,35 @@ function renderRank() {
   }
 
   function playerPhotoHTML(playerName) {
+  const p = players.find(x => x.player_name === playerName || x.player === playerName) || {};
+  const url = p.photo_url || '';
+  const div = p.division_actual || p['division_actual'] || p['división_actual'] || '';
+
+  const avatarHTML = (url && String(url).startsWith('http'))
+    ? `
+      <img class="rank-player-avatar" src="${url}" alt="${playerName}"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'">
+      <span class="rank-player-initials" style="display:none;">${ini(playerName)}</span>
+    `
+    : `
+      <span class="rank-player-initials">${ini(playerName)}</span>
+    `;
+
+  return `
+    ${avatarHTML}
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <span style="font-size:13px;font-weight:600;color:var(--text)">${playerName}</span>
+      <span class="badge" style="display:inline-block;width:fit-content;margin:0;">División ${div || '—'}</span>
+    </div>
+  `;
+}
+
+  function rachaHTML(playerName) {
     const p = players.find(x => x.player_name === playerName || x.player === playerName) || {};
-    const url = p.photo_url || '';
-
-    if (url && String(url).startsWith('http')) {
-      return `
-        <img class="rank-player-avatar" src="${url}" alt="${playerName}"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'">
-        <span class="rank-player-initials" style="display:none;">${ini(playerName)}</span>
-      `;
-    }
-
-    return `<span class="rank-player-initials">${ini(playerName)}</span>`;
+    const racha = p.racha_actual || '';
+    if (!racha) return '—';
+    const cls = racha.startsWith('W') ? 'rank-racha-w' : 'rank-racha-l';
+    return `<span class="${cls}">${racha}</span>`;
   }
 
   document.getElementById('page-rank').innerHTML = `
@@ -843,14 +868,14 @@ function renderRank() {
       <div>
         <div class="page-title">LIG Rank</div>
         <div style="font-size:11px;color:var(--muted);margin-top:2px;">
-          Ranking U14 · Últimos 14 partidos ponderados por división
+          Últimos 14 partidos · ponderado por división
         </div>
       </div>
     </div>
 
     <div class="rank-card">
       <div class="card-header">
-        <span class="card-title">Ranking Last 14</span>
+        <span class="card-title" style="font-size:10px;letter-spacing:.4px;">Ranking Last 14</span>
         <span class="card-meta">${rows.length} jugadores</span>
       </div>
 
@@ -858,52 +883,48 @@ function renderRank() {
         <thead>
           <tr>
             <th>#</th>
-            <th>Jugador</th>
+            <th style="text-align:left">Jugador</th>
             <th>Puntos</th>
-            <th>PJ Rank</th>
+            <th>PJ</th>
             <th>V-D</th>
+            <th>Racha</th>
           </tr>
         </thead>
         <tbody>
           ${rows.length===0 ? `
-            <tr>
-              <td colspan="5" style="text-align:center;padding:24px;color:var(--muted);">
-                Sin datos de ranking
-              </td>
-            </tr>
+            <tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted);">Sin datos de ranking</td></tr>
           ` : rows.map(r => {
             const pos = Number(r.rank_position || 0);
             let posClass = '';
-            if (pos === 1) posClass = 'top1';
-            else if (pos === 2) posClass = 'top2';
-            else if (pos === 3) posClass = 'top3';
+            if (pos===1) posClass='top1';
+            else if (pos===2) posClass='top2';
+            else if (pos===3) posClass='top3';
 
-            const wins = Number(r.g2 || 0) + Number(r.g3 || 0);
-            const losses = Number(r.p3 || 0) + Number(r.p2 || 0);
-
-            const pjRank = `${r.matches_counted || 0}/${r.matches_played || 0}`;
+            const wins = Number(r.g2||0) + Number(r.g3||0);
+            const losses = Number(r.p3||0) + Number(r.p2||0);
+            const pjRank = `${r.matches_counted||0}/${r.matches_played||0}`;
             const record = `${wins}-${losses}`;
+            const isTop3 = pos <= 3;
 
             return `
-              <tr>
+              <tr class="${isTop3?'rank-top3':''}">
                 <td><span class="rank-pos ${posClass}">${pos}</span></td>
                 <td>
                   <span class="rank-player">
-                    ${playerPhotoHTML(r.player || '')}
-                    <span>${r.player || '—'}</span>
+                    ${playerPhotoHTML(r.player||'')}
                   </span>
                 </td>
                 <td><span class="rank-score">${fmtPoints(r.score_last14)}</span></td>
-                <td>${pjRank}</td>
+                <td style="font-size:12px;color:var(--muted)">${pjRank}</td>
                 <td><span class="rank-record">${record}</span></td>
+                <td>${rachaHTML(r.player||'')}</td>
               </tr>
             `;
           }).join('')}
         </tbody>
       </table>
     </div>
-
-    <div class="foot">© 2026 LIG · Powered by NonData&amp;Co</div>
+    <div class="foot">© 2026 LIG · Powered by NonData&Co</div>
   `;
 }
 // ── INIT ──
