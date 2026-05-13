@@ -444,6 +444,10 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 }
 .badge { display: inline-block; background: var(--gold); color: #fff; font-size: 9px; font-weight: 700; padding: 2px 9px; border-radius: 4px; margin-bottom: 10px; }
 .badge.dark { background: var(--black); color: #fff; }
+.badge.replacement {
+  background: var(--red);
+  color: #fff;
+}
 .srow { display: flex; gap: 20px; }
 .sm { display: flex; flex-direction: column; gap: 1px; }
 .sm .lb { font-size: 9px; color: var(--muted); }
@@ -512,7 +516,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .loading { text-align: center; color: var(--muted); padding: 60px 0; font-size: 13px; }
 .foot { text-align: center; color: #070707; font-size: 10px; padding: 18px 0 6px; }
 
-//* ── RANK PAGE ── */
+/* ── RANK PAGE ── */
 .rank-card {
   background: transparent;
   border: none;
@@ -711,6 +715,12 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
   background: #111;
   color: #fff;
   border-color: #111;
+}
+
+.div-chip.replacement {
+  background: #dc2626;
+  color: #fff;
+  border-color: #dc2626;
 }
 
 .rank-racha-w {
@@ -985,6 +995,27 @@ function avHTML(url, name, borderColor) {
 }
 function avHTMLA(url, name) { return avHTML(url, name, 'var(--gold)'); }
 function avHTMLB(url, name) { return avHTML(url, name, 'var(--black)'); }
+function isReplacementPlayer(playerName) {
+  const p = players.find(x => x.player_name === playerName || x.player === playerName) || {};
+  return p.division_actual === 'Reemplazo';
+}
+
+function displayPlayerName(playerName) {
+  if (!playerName) return '—';
+
+  return isReplacementPlayer(playerName)
+    ? `${playerName} <span style="font-weight:500;color:var(--muted);font-size:11px;">(R)</span>`
+    : playerName;
+}
+
+function displayPairName(pairDisplay) {
+  if (!pairDisplay) return '—';
+
+  return String(pairDisplay)
+    .split('/')
+    .map(name => displayPlayerName(name.trim()))
+    .join(' / ');
+}
 
 // ── SHOW PAGE ──
 function showPage(page) {
@@ -1093,7 +1124,7 @@ function renderLiga() {
                                `<span style="color:var(--muted)">0</span>`;
                 return `<tr>
                   <td>${posEl}</td>
-                  <td style="font-weight:600;color:var(--text);text-align:left;font-size:13px;">${r.player||'—'}</td>
+                  <td style="font-weight:600;color:var(--text);text-align:left;font-size:13px;">${displayPlayerName(r.player)}</td>
                   <td style="font-size:14px;font-weight:800;color:var(--text)">${r.pts||0}</td>
                  <td style="font-size:12px;font-weight:400">${diffEl}</td>
                   <td>${r.pj||0}</td>
@@ -1134,12 +1165,12 @@ function renderLiga() {
                 ${matches.map(m => {
                   const played = !!m.score_display;
                   return `<div class="match-row">
-                    <div class="match-pair">${m.pair1_display||'—'}</div>
+                    <div class="match-pair">${displayPairName(m.pair1_display)}</div>
                     ${played
                       ? `<div class="match-score">${m.score_display}</div>`
                       : `<div class="match-pending">⏱ Pendiente</div>`
                     }
-                    <div class="match-pair right">${m.pair2_display||'—'}</div>
+                    <div class="match-pair right">${displayPairName(m.pair2_display)}</div>
                   </div>`;
                 }).join('')}
               </div>`;
@@ -1193,7 +1224,9 @@ function renderH2H() {
         ${avHTMLA(pA.photo_url||'',a)}
         <div class="pi">
           <h2>${a}</h2>
-          <div class="badge">División ${pA.division_actual||'—'}</div>
+          <div class="badge ${pA.division_actual === 'Reemplazo' ? 'replacement' : ''}">
+  ${pA.division_actual === 'Reemplazo' ? 'Reemplazo' : `División ${pA.division_actual || '—'}`}
+</div>
           <div class="srow">
             <div class="sm"><span class="lb">Ranking</span><span class="vl">${pA.rank_position||'—'}°</span></div>
             <div class="sm"><span class="lb">Racha Actual</span><span class="vl ${rc(pA.racha_actual)}">${pA.racha_actual||'—'}</span></div>
@@ -1216,7 +1249,9 @@ function renderH2H() {
         ${avHTMLB(pB.photo_url||'',b)}
         <div class="pi">
           <h2>${b}</h2>
-          <div class="badge dark">División ${pB.division_actual||'—'}</div>
+          <div class="badge ${pB.division_actual === 'Reemplazo' ? 'replacement' : 'dark'}">
+  ${pB.division_actual === 'Reemplazo' ? 'Reemplazo' : `División ${pB.division_actual || '—'}`}
+</div>
           <div class="srow">
             <div class="sm" style="align-items:flex-end"><span class="lb">Ranking</span><span class="vl">${pB.rank_position||'—'}°</span></div>
             <div class="sm" style="align-items:flex-end"><span class="lb">Racha Actual</span><span class="vl ${rc(pB.racha_actual)}">${pB.racha_actual||'—'}</span></div>
@@ -1285,8 +1320,19 @@ function renderRank() {
     const p = getPlayerData(playerName);
     const url = p.photo_url || '';
     const div = p.division_actual || p['division_actual'] || p['división_actual'] || '';
-    const divDisplay = div && div !== '-' ? div : '—';
-    const chipClass = divDisplay === '—' ? 'div-chip no-division' : 'div-chip';
+const isReplacement = div === 'Reemplazo';
+
+const divDisplay = isReplacement
+  ? 'R'
+  : (div && div !== '-' ? div : '—');
+
+const chipClass = isReplacement
+  ? 'div-chip replacement'
+  : (divDisplay === '—' ? 'div-chip no-division' : 'div-chip');
+
+const divLabel = isReplacement
+  ? 'Reemplazo'
+  : `División ${divDisplay}`;
 
     const avatarHTML = (url && String(url).startsWith('http'))
       ? `
@@ -1303,7 +1349,7 @@ function renderRank() {
         ${avatarHTML}
         <div class="rank-player-info">
           <span class="rank-player-name">${playerName}</span>
-          <span class="${chipClass}">División ${divDisplay}</span>
+          <span class="${chipClass}">${divLabel}</span>
         </div>
       </div>
     `;

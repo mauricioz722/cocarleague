@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LIG | Ligas individuales de pádel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --gold: #C8A600;
+      --gold-dark: #9E8300;
+      --black: #111111;
+      --bg: #F2F1ED;
+      --white: #ffffff;
+      --muted: #666666;
+      --border: #E4E3DF;
+      --green: #16a34a;
+      --soft: #FBFAF6;
+      --red: #dc2626;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--black);
+      min-height: 100vh;
+      line-height: 1.45;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page { width: 100%; overflow-x: hidden; }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      font-size: 22px;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--black);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 13px;
+      color: #444;
+      font-weight: 650;
+    }
+
+    .nav-links a:hover { color: var(--black); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 850;
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,0.10); }
+    .btn-primary { background: var(--black); color: #fff; }
+    .btn-gold { background: var(--gold); color: #fff; box-shadow: 0 8px 22px rgba(200,166,0,0.25); }
+    .btn-light { background: #fff; border-color: var(--border); color: var(--black); }
+
+    .hero {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 78px 22px 42px;
+      display: grid;
+      grid-template-columns: 1.04fr .96fr;
+      gap: 46px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 850;
+      color: #333;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 4px rgba(22,163,74,0.14);
+    }
+
+    h1 {
+      font-size: clamp(42px, 6vw, 74px);
+      line-height: .91;
+      letter-spacing: -0.075em;
+      font-weight: 900;
+      max-width: 810px;
+      margin-bottom: 22px;
+    }
+
+    .hero-lead {
+      font-size: 19px;
+      color: #3f3f3f;
+      max-width: 650px;
+      margin-bottom: 24px;
+    }
+
+    .hero-lead strong { color: var(--black); }
+
+    .hero-bullets {
+      display: grid;
+      gap: 9px;
+      margin-bottom: 26px;
+      max-width: 620px;
+    }
+
+    .hero-bullet {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 14px;
+      color: #3f3f3f;
+      font-weight: 600;
+    }
+
+    .check {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: #dcfce7;
+      color: var(--green);
+      display: inline-grid;
+      place-items: center;
+      flex-shrink: 0;
+      font-size: 12px;
+      font-weight: 900;
+      margin-top: 1px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .microcopy { font-size: 12px; color: var(--muted); font-weight: 600; }
+
+    .phone-card {
+      background: var(--black);
+      border-radius: 34px;
+      padding: 18px;
+      box-shadow: 0 28px 60px rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.08);
+      max-width: 420px;
+      margin-left: auto;
+    }
+
+    .screen {
+      background: #F7F6F1;
+      border-radius: 24px;
+      overflow: hidden;
+      min-height: 560px;
+    }
+
+    .screen-top {
+      padding: 20px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .screen-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .screen-title strong { font-size: 18px; letter-spacing: -0.04em; }
+
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 999px;
+      padding: 5px 10px;
+      background: var(--green);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .03em;
+    }
+
+    .match-card {
+      background: #fff;
+      border: 1px solid #e8e3d8;
+      border-radius: 16px;
+      margin: 10px 16px;
+      padding: 13px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.035);
+    }
+
+    .match-label {
+      font-size: 10px;
+      font-weight: 850;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: 8px;
+    }
+
+    .match-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .score-pill {
+      background: #f4f1e8;
+      border: 1px solid #e6ddc9;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .rank-row {
+      background: #fff;
+      border: 1px solid #e8e3d8;
+      border-radius: 16px;
+      margin: 10px 16px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 38px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.035);
+    }
+
+    .rank-num {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #fff;
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    .rank-name { font-size: 14px; font-weight: 850; letter-spacing: -0.02em; }
+    .rank-sub { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 650; }
+    .rank-score { text-align: right; font-weight: 900; font-size: 15px; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 8px 16px 18px;
+    }
+
+    .mini-stat {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 10px;
+      text-align: center;
+    }
+
+    .mini-stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .mini-stat strong { font-size: 18px; font-weight: 900; }
+
+    .section {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 58px 22px;
+    }
+
+    .section-heading { max-width: 810px; margin-bottom: 28px; }
+
+    .section-kicker {
+      color: var(--gold-dark);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: clamp(30px, 4vw, 50px);
+      line-height: 1;
+      letter-spacing: -0.06em;
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+
+    .section-copy { color: #444; font-size: 17px; max-width: 780px; }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .problem-card, .feature-card, .segment-card, .step {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.035);
+    }
+
+    .problem-card strong, .feature-card strong, .segment-card strong, .step strong {
+      display: block;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: -0.035em;
+      margin-bottom: 8px;
+    }
+
+    .problem-card p, .feature-card p, .segment-card p, .step p {
+      color: #555;
+      font-size: 14px;
+    }
+
+    .icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: #F4F1E8;
+      color: var(--gold-dark);
+      font-weight: 900;
+      margin-bottom: 16px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: .95fr 1.05fr;
+      gap: 34px;
+      align-items: center;
+    }
+
+    .black-panel {
+      background: var(--black);
+      color: #fff;
+      border-radius: 28px;
+      padding: 34px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.20);
+    }
+
+    .black-panel p { color: rgba(255,255,255,0.72); font-size: 16px; margin-top: 12px; }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .segment-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .step-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: var(--black);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .quote-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 34px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .quote-main {
+      font-size: clamp(26px, 4vw, 44px);
+      line-height: 1;
+      letter-spacing: -0.06em;
+      font-weight: 900;
+    }
+
+    .quote-side {
+      color: #444;
+      font-size: 16px;
+    }
+
+    .cta {
+      max-width: 1180px;
+      margin: 36px auto 72px;
+      padding: 0 22px;
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, #111 0%, #1d1d1d 55%, #2a250f 100%);
+      color: #fff;
+      border-radius: 34px;
+      padding: 46px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 26px;
+      align-items: center;
+      box-shadow: 0 28px 70px rgba(0,0,0,0.24);
+    }
+
+    .cta h2 { color: #fff; margin-bottom: 10px; }
+    .cta p { color: rgba(255,255,255,0.72); font-size: 17px; max-width: 690px; }
+
+    .footer {
+      border-top: 1px solid var(--border);
+      background: #fff;
+      padding: 26px 22px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding-top: 46px; }
+      .phone-card { margin: 0 auto; }
+      .problem-grid, .segment-grid { grid-template-columns: repeat(2, 1fr); }
+      .split, .quote-box { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .cta-box { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .nav-inner { padding: 12px 16px; }
+      .brand { font-size: 18px; }
+      .brand-mark { width: 34px; height: 34px; }
+      .hero, .section { padding-left: 16px; padding-right: 16px; }
+      .hero { padding-top: 36px; }
+      .hero-lead { font-size: 16px; }
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .btn { width: 100%; }
+      .problem-grid, .feature-grid, .segment-grid { grid-template-columns: 1fr; }
+      .black-panel, .cta-box, .quote-box { padding: 28px 22px; border-radius: 26px; }
+      .screen { min-height: 500px; }
+      .phone-card { padding: 12px; border-radius: 28px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="nav">
+      <div class="nav-inner">
+        <a href="#top" class="brand">
+          <span class="brand-mark">LIG</span>
+          <span>LIG</span>
+        </a>
+        <nav class="nav-links">
+          <a href="#problema">Problema</a>
+          <a href="#solucion">Solución</a>
+          <a href="#para-quien">Para quién</a>
+          <a href="#inscripcion">Inscripción</a>
+        </nav>
+        <a class="btn btn-primary" href="FORM_LINK_AQUI" target="_blank" rel="noopener">Inscribirme</a>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div>
+          <div class="eyebrow"><span class="dot"></span> Ligas individuales de pádel para grupos, colegios, empresas y clubes</div>
+          <h1>Jugar más partidos. Con más gente. En una liga que se siente profesional.</h1>
+          <p class="hero-lead">
+            Organizar partidos de pádel parece fácil hasta que empiezan los chats, los horarios, las parejas repetidas, los grupos desordenados y la falta de continuidad. <strong>LIG resuelve eso con una liga individual estructurada, social y competitiva.</strong>
+          </p>
+
+          <div class="hero-bullets">
+            <div class="hero-bullet"><span class="check">✓</span><span>Juegas con distintos partners y contra distintos rivales.</span></div>
+            <div class="hero-bullet"><span class="check">✓</span><span>Entras a una dinámica ordenada, entretenida y permanente.</span></div>
+            <div class="hero-bullet"><span class="check">✓</span><span>Vives una experiencia amateur con ranking, fixture, H2H y estadísticas de nivel profesional.</span></div>
+          </div>
+
+          <div class="hero-actions">
+            <a class="btn btn-gold" href="FORM_LINK_AQUI" target="_blank" rel="noopener">Quiero inscribirme</a>
+            <a class="btn btn-light" href="#solucion">Ver cómo funciona</a>
+          </div>
+          <p class="microcopy">Para jugadores que quieren competir, socializar y jugar con estructura.</p>
+        </div>
+
+        <div class="hero-panel">
+          <div class="phone-card" aria-label="Vista previa de LIG">
+            <div class="screen">
+              <div class="screen-top">
+                <div class="screen-title">
+                  <strong>Cocar League</strong>
+                  <span class="live-pill">● LIVE</span>
+                </div>
+                <p style="font-size:12px;color:#666;font-weight:650;">Liga individual · partners rotativos · ranking vivo</p>
+              </div>
+
+              <div class="match-card">
+                <div class="match-label">Próximo partido</div>
+                <div class="match-row">
+                  <span>Martínez / Rinaldi</span>
+                  <span class="score-pill">20:30</span>
+                  <span style="text-align:right;">Hadwa / Luna</span>
+                </div>
+              </div>
+
+              <div class="rank-row">
+                <div class="rank-num">1</div>
+                <div>
+                  <div class="rank-name">Martínez</div>
+                  <div class="rank-sub">División A · W10</div>
+                </div>
+                <div class="rank-score">14.200</div>
+              </div>
+
+              <div class="rank-row">
+                <div class="rank-num" style="background:#dedede;color:#111;">2</div>
+                <div>
+                  <div class="rank-name">Rinaldi</div>
+                  <div class="rank-sub">División A · W6</div>
+                </div>
+                <div class="rank-score">13.810</div>
+              </div>
+
+              <div class="stats-grid">
+                <div class="mini-stat"><span>H2H</span><strong>7-4</strong></div>
+                <div class="mini-stat"><span>Sets</span><strong>15-9</strong></div>
+                <div class="mini-stat"><span>Racha</span><strong>W3</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="problema">
+        <div class="section-heading">
+          <div class="section-kicker">El problema real</div>
+          <h2>Todos quieren jugar pádel, pero armar partidos buenos de forma constante es difícil.</h2>
+          <p class="section-copy">El problema no es solo anotar resultados. El problema es crear una dinámica que mantenga a la gente jugando, conectada, motivada y compitiendo semana a semana.</p>
+        </div>
+
+        <div class="problem-grid">
+          <div class="problem-card">
+            <div class="icon">01</div>
+            <strong>Cuesta generar partidos</strong>
+            <p>Chats eternos, horarios cruzados, parejas repetidas y poca continuidad. Al final, se juega menos de lo que se quiere.</p>
+          </div>
+          <div class="problem-card">
+            <div class="icon">02</div>
+            <strong>Siempre juegan los mismos</strong>
+            <p>Es difícil mezclar niveles, sumar nuevos jugadores e insertar a personas en una dinámica ya armada.</p>
+          </div>
+          <div class="problem-card">
+            <div class="icon">03</div>
+            <strong>Falta estructura competitiva</strong>
+            <p>Sin ranking, divisiones y calendario, los partidos pierden historia, tensión deportiva y sentido de progreso.</p>
+          </div>
+          <div class="problem-card">
+            <div class="icon">04</div>
+            <strong>La experiencia se pierde</strong>
+            <p>Termina el partido y queda poco: un resultado en el chat, sin estadísticas, historial ni memoria competitiva.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="solucion">
+        <div class="split">
+          <div class="black-panel">
+            <div class="section-kicker" style="color:#d8bd35;">La solución</div>
+            <h2>LIG organiza ligas individuales de pádel con experiencia profesional.</h2>
+            <p>No es solo una app de resultados. Es una forma de activar comunidades: jugar con distintos partners, competir por ranking, socializar y vivir una liga amateur con estructura real.</p>
+          </div>
+
+          <div class="feature-grid">
+            <div class="feature-card">
+              <div class="icon">P</div>
+              <strong>Partners rotativos</strong>
+              <p>La liga individual permite jugar con distintos compañeros y contra distintos rivales, evitando grupos cerrados.</p>
+            </div>
+            <div class="feature-card">
+              <div class="icon">C</div>
+              <strong>Competencia ordenada</strong>
+              <p>Divisiones, fixture, resultados y ranking para que cada partido tenga contexto y consecuencia.</p>
+            </div>
+            <div class="feature-card">
+              <div class="icon">S</div>
+              <strong>Socialización real</strong>
+              <p>Ideal para grupos de amigos, apoderados, empresas y clubes que quieren crear comunidad alrededor del pádel.</p>
+            </div>
+            <div class="feature-card">
+              <div class="icon">D</div>
+              <strong>Datos que motivan</strong>
+              <p>H2H, rachas, win rate, sets, games y estadísticas históricas para seguir tu evolución como jugador.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="para-quien">
+        <div class="section-heading">
+          <div class="section-kicker">Para quién es</div>
+          <h2>Diseñada para activar comunidades a través del pádel.</h2>
+          <p class="section-copy">LIG funciona donde existe un grupo con ganas de jugar, pero falta estructura para convertir esas ganas en una liga permanente.</p>
+        </div>
+
+        <div class="segment-grid">
+          <div class="segment-card">
+            <div class="icon">A</div>
+            <strong>Grupos de amigos</strong>
+            <p>Para ordenar partidos, mezclar parejas y transformar el grupo de WhatsApp en una liga real.</p>
+          </div>
+          <div class="segment-card">
+            <div class="icon">C</div>
+            <strong>Colegios y apoderados</strong>
+            <p>Para crear comunidad, integración y competencia sana entre padres, madres y familias.</p>
+          </div>
+          <div class="segment-card">
+            <div class="icon">E</div>
+            <strong>Empresas</strong>
+            <p>Para fomentar cultura, bienestar y conexión entre equipos a través de una actividad deportiva estructurada.</p>
+          </div>
+          <div class="segment-card">
+            <div class="icon">CL</div>
+            <strong>Clubes de pádel</strong>
+            <p>Para aumentar actividad, fidelizar jugadores y ofrecer una experiencia más profesional a sus comunidades.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="beneficios">
+        <div class="quote-box">
+          <div class="quote-main">Dejas de perseguir partidos. Empiezas a vivir una liga.</div>
+          <div class="quote-side">
+            <p><strong>LIG resuelve la fricción principal:</strong> encontrar con quién jugar, mantener continuidad y darle sentido competitivo a cada partido.</p>
+            <br>
+            <p>El jugador no solo participa. Entra a una experiencia con ranking, historia, estadísticas, rivalidades y progresión.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <div class="section-kicker">Qué consigues al entrar</div>
+          <h2>Una experiencia competitiva, social y medible.</h2>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <strong>Juegas más y mejor</strong>
+            <p>Una liga calendarizada reduce la fricción para armar partidos y te mantiene activo semana a semana.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <strong>Te insertas en una comunidad</strong>
+            <p>Conoces nuevos jugadores, rotas partners y compites en una dinámica que mezcla deporte y socialización.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <strong>Accedes al contenido LIG</strong>
+            <p>Revisas estadísticas individuales profundas de todas las ligas en las que participas y has participado.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta" id="inscripcion">
+        <div class="cta-box">
+          <div>
+            <h2>Inscríbete a LIG y juega una liga amateur como profesional.</h2>
+            <p>Completa el formulario y entra a una experiencia diseñada para competir, socializar y jugar pádel con estructura.</p>
+          </div>
+          <a class="btn btn-gold" href="FORM_LINK_AQUI" target="_blank" rel="noopener">Ir al formulario de inscripción</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>© 2026 LIG · Powered by NonData&Co</span>
+        <span>Ligas individuales de pádel · Ranking · H2H · Fixture · Estadísticas</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
