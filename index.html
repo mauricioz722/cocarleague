@@ -1069,6 +1069,62 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
   font-weight: 800 !important;
 }
 
+/* ── ADS / SPONSOR CALLOUTS ── */
+.ad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.ad-card {
+  background: #ffffff;
+  border: 1px solid #e8e3d8;
+  border-radius: 12px;
+  padding: 10px 12px;
+  min-height: 74px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.025);
+  overflow: hidden;
+}
+
+.ad-kicker {
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.ad-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.15;
+}
+
+.ad-text {
+  font-size: 9px;
+  color: var(--muted);
+  line-height: 1.2;
+}
+
+@media (max-width: 600px) {
+  .ad-grid {
+    grid-template-columns: 1fr;
+    gap: 7px;
+    margin-top: 10px;
+    margin-bottom: 2px;
+  }
+
+  .ad-card {
+    min-height: 58px;
+    padding: 10px 12px;
+  }
+}
 
 </style>
 </head>
@@ -1284,6 +1340,26 @@ function renderLiga() {
               }).join('')}
             </tbody>
           </table>
+                </div>
+
+        <div class="ad-grid">
+          <div class="ad-card">
+            <div class="ad-kicker">Sponsor oficial</div>
+            <div class="ad-title">Tu marca aquí</div>
+            <div class="ad-text">Conecta con la comunidad LIG.</div>
+          </div>
+
+          <div class="ad-card">
+            <div class="ad-kicker">Partner local</div>
+            <div class="ad-title">Beneficio jugadores</div>
+            <div class="ad-text">Descuentos, premios o promociones.</div>
+          </div>
+
+          <div class="ad-card">
+  <div class="ad-kicker">Promoción especial</div>
+  <div class="ad-title">Oferta para jugadores</div>
+  <div class="ad-text">Activa beneficios exclusivos para la comunidad LIG.</div>
+</div>
         </div>
       </div>
 
