@@ -1476,7 +1476,16 @@ function renderH2H() {
   if (document.getElementById('h2h-sT')) document.getElementById('h2h-sT').value = sT;
   if (document.getElementById('h2h-sD')) document.getElementById('h2h-sD').value = sD;
 
-  setTimeout(()=>{ bar('bmA','bmB',mA,mB); bar('bsA','bsB',sA,sB2); bar('bgA','bgB',gA,gB); },50);
+  setTimeout(() => {
+  bar('bmA','bmB',mA,mB);
+  bar('bsA','bsB',sA,sB2);
+  bar('bgA','bgB',gA,gB);
+
+  const histBox = document.querySelector('#page-h2h .hist');
+  if (histBox && window.innerWidth <= 600) {
+    histBox.scrollLeft = histBox.scrollWidth;
+  }
+}, 50);
 }
 
 // ── RANK PAGE ──
