@@ -462,8 +462,8 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 150px;
-  padding: 14px 10px;
+  min-height: 144px;
+  padding: 12px 10px 10px;
   text-align: center;
   position: relative;
 }
@@ -475,18 +475,87 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
   color: var(--text);
   line-height: 1;
 }
-.h2h-tag { background: var(--text); color: var(--white); font-size: 8px; font-weight: 700; padding: 3px 12px; border-radius: 4px; margin: 5px 0 7px; letter-spacing: .5px; }
-.h2h-sc { display: flex; align-items: flex-start; gap: 12px; }
-.h2h-col { display: flex; flex-direction: column; align-items: center; }
-.h2h-n {
-  font-size: 23px;
-  font-weight: 800;
-  line-height: 1;
-  color: var(--text);
+.total-mini {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 126px;
 }
-.h2h-n.gold { color: var(--gold); }
-.h2h-sub { font-size: 9px; color: var(--muted); margin-top: 2px; }
-.h2h-vs { font-size: 10px; color: var(--muted); margin-top: 9px; }
+
+.total-mini-label {
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: .7px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.total-mini-num {
+  font-size: 16px;
+  font-weight: 750;
+  color: var(--text);
+  line-height: 1;
+}
+.h2h-tag {
+  background: var(--text);
+  color: var(--white);
+  font-size: 9px;
+  font-weight: 750;
+  padding: 5px 20px;
+  border-radius: 5px;
+  margin: -4px 0 10px;
+  letter-spacing: .55px;
+}
+.h2h-sc {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 18px;
+  width: 100%;
+}
+
+.h2h-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 54px;
+}
+
+.h2h-n {
+  font-size: 38px;
+  font-weight: 750;
+  line-height: 0.9;
+  color: var(--text);
+  letter-spacing: -0.7px;
+}
+
+.h2h-n.gold { 
+  color: var(--gold); 
+}
+
+.h2h-sub {
+  font-size: 9px;
+  color: var(--muted);
+  margin-top: 5px;
+  max-width: 70px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.h2h-vs {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-top: 12px;
+}
 
 .metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
 .mc { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
@@ -1294,15 +1363,27 @@ function renderH2H() {
       </div></div>
 
       <div class="center-card">
-        <div class="tm-lbl">TOTAL MATCH</div>
-        <div class="tm-num">${mA+mB}</div>
-        <div class="h2h-tag">H2H GLOBAL</div>
-        <div class="h2h-sc">
-          <div class="h2h-col"><span class="h2h-n gold">${mA}</span><span class="h2h-sub">${a}</span></div>
-          <span class="h2h-vs">vs</span>
-          <div class="h2h-col"><span class="h2h-n">${mB}</span><span class="h2h-sub">${b}</span></div>
-        </div>
-      </div>
+  <div class="h2h-tag">H2H GLOBAL</div>
+
+  <div class="h2h-sc">
+    <div class="h2h-col">
+      <span class="h2h-n gold">${mA}</span>
+      <span class="h2h-sub">${a}</span>
+    </div>
+
+    <span class="h2h-vs">vs</span>
+
+    <div class="h2h-col">
+      <span class="h2h-n">${mB}</span>
+      <span class="h2h-sub">${b}</span>
+    </div>
+  </div>
+
+  <div class="total-mini">
+    <span class="total-mini-label">TOTAL MATCHES</span>
+    <span class="total-mini-num">${mA+mB}</span>
+  </div>
+</div>
 
       <div class="player-card right"><div class="pc-inner">
         ${avHTMLB(pB.photo_url||'',b)}
@@ -1311,7 +1392,7 @@ function renderH2H() {
           <div class="badge ${
   pB.division_actual === 'Reemplazo'
     ? 'replacement'
-    : 'dark'
+    : (pB.division_actual === '-' || !pB.division_actual ? 'dark' : '')
 }">
   ${
     pB.division_actual === 'Reemplazo'
